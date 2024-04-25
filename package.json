@@ -9,7 +9,7 @@
     "test": "node --test test/",
     "test:coverage": "node --test --experimental-test-coverage test/",
     "test:debug": "node --inspect --test --watch test/",
-    "init-db": "node init src/config/init-db.js"
+    "init-db": "node src/config/init-db.js"
   },
   "repository": {
     "type": "git",

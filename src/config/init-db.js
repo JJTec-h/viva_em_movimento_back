@@ -1,5 +1,7 @@
 // init-db.js
 import sequelize from './config.js';
+import Client from '../model/client.js';
+import MonthlyReport from '../model/monthlyReport.js';
 
 async function initializeDatabase() {
     try {

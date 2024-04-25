@@ -58,5 +58,4 @@ export const checkDatabase = async() => {
   }
 }
 
-// Exportar o sequelize e a função de verificação
 export default sequelize;
