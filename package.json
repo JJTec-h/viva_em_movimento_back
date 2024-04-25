@@ -1,0 +1,31 @@
+{
+  "name": "vivaemmovimento",
+  "version": "1.0.0",
+  "description": "Projeto para controle de clientes da academia viva em movimento",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/app.js",
+    "test": "node --test test/",
+    "test:coverage": "node --test --experimental-test-coverage test/",
+    "test:debug": "node --inspect --test --watch test/",
+    "init-db": "node init src/config/init-db.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "viva_em_movimento"
+  },
+  "keywords": [
+    "gym"
+  ],
+  "author": "Maykon Costa",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
+    "pkg": "^5.8.1",
+    "sequelize": "^6.37.3"
+  }
+}
