@@ -48,6 +48,7 @@ export const getAllClients = async (req, res) => {
 
 export const getClient = async (req, res) => {
   try {
+    console.log('get');
     const client = await Client.findByPk(req.params.id);
     if (!client) {
       return res.status(404).send({ message: 'Client not found' });
@@ -111,5 +112,20 @@ export const deleteClient = async (req, res) => {
   } catch (error) {
     await transaction.rollback();
     res.status(500).send(error);
+  }
+};
+
+export const getCountActiveClients = async (req, res) => {
+  try {
+     console.log('count');
+      const count = await Client.count({
+          where: {
+              active: true 
+          }
+      });
+      res.status(200).json({ activeClients: count });
+  } catch (error) {
+      console.error('Erro ao buscar a quantidade de clientes ativos:', error);
+      res.status(500).send(error.message);
   }
 };

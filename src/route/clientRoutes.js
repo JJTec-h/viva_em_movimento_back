@@ -1,8 +1,8 @@
 import express from 'express';
 const router = express.Router();
-import {createClient, updateClient, deleteClient, getAllClients, getClient} from '../controller/clientController.js';
+import {createClient, updateClient, deleteClient, getAllClients, getClient, getCountActiveClients} from '../controller/clientController.js';
 
-// Define routes
+router.get('/quantidade', getCountActiveClients);
 router.post('/', createClient);
 router.get('/', getAllClients);
 router.get('/:id', getClient);
