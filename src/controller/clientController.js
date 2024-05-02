@@ -1,6 +1,6 @@
-import Client from '../model/client.js';
-import sequelize from '../config/config.js';
-import MonthlyReport from '../model/monthlyReport.js';
+import Client from "../model/client.js";
+import sequelize from "../config/config.js";
+import MonthlyReport from "../model/monthlyReport.js";
 
 export const createClient = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -8,26 +8,32 @@ export const createClient = async (req, res) => {
     const client = await Client.create(req.body, { transaction });
 
     const date = new Date();
-    const report = await MonthlyReport.findOne({
-      where: {
-        monthNumber: date.getMonth() + 1,
-        year: date.getFullYear()
-      }
-    }, { transaction });
+    const report = await MonthlyReport.findOne(
+      {
+        where: {
+          monthNumber: date.getMonth() + 1,
+          year: date.getFullYear(),
+        },
+      },
+      { transaction }
+    );
 
     if (report) {
       report.newClients += 1;
       report.activeClients += 1;
       await report.save({ transaction });
     } else {
-      await MonthlyReport.create({
-        monthName: date.toLocaleString('default', { month: 'long' }),
-        monthNumber: date.getMonth() + 1,
-        year: date.getFullYear(),
-        activeClients: 1,
-        clientsLeft: 0,
-        newClients: 1
-      }, { transaction });
+      await MonthlyReport.create(
+        {
+          monthName: date.toLocaleString("default", { month: "long" }),
+          monthNumber: date.getMonth() + 1,
+          year: date.getFullYear(),
+          activeClients: 1,
+          clientsLeft: 0,
+          newClients: 1,
+        },
+        { transaction }
+      );
     }
     await transaction.commit();
     res.status(201).send(client);
@@ -48,10 +54,10 @@ export const getAllClients = async (req, res) => {
 
 export const getClient = async (req, res) => {
   try {
-    console.log('get');
+    console.log("get");
     const client = await Client.findByPk(req.params.id);
     if (!client) {
-      return res.status(404).send({ message: 'Client not found' });
+      return res.status(404).send({ message: "Client not found" });
     }
     res.send(client);
   } catch (error) {
@@ -63,7 +69,7 @@ export const updateClient = async (req, res) => {
   try {
     const client = await Client.findByPk(req.params.id);
     if (!client) {
-      return res.status(404).send({ message: 'Client not found' });
+      return res.status(404).send({ message: "Client not found" });
     }
     const updatedClient = await client.update(req.body);
     res.send(updatedClient);
@@ -78,37 +84,43 @@ export const deleteClient = async (req, res) => {
     const client = await Client.findByPk(req.params.id, { transaction });
     if (!client) {
       await transaction.rollback();
-      return res.status(404).send({ message: 'Client not found' });
+      return res.status(404).send({ message: "Client not found" });
     }
 
     // Marcar o cliente como inativo, em vez de deletar
     await client.update({ active: false }, { transaction });
 
     const date = new Date();
-    const report = await MonthlyReport.findOne({
-      where: {
-        monthNumber: date.getMonth() + 1,
-        year: date.getFullYear()
-      }
-    }, { transaction });
+    const report = await MonthlyReport.findOne(
+      {
+        where: {
+          monthNumber: date.getMonth() + 1,
+          year: date.getFullYear(),
+        },
+      },
+      { transaction }
+    );
 
     if (report) {
       report.clientsLeft += 1;
       report.activeClients -= 1;
       await report.save({ transaction });
     } else {
-      await MonthlyReport.create({
-        monthName: date.toLocaleString('default', { month: 'long' }),
-        monthNumber: date.getMonth() + 1,
-        year: date.getFullYear(),
-        activeClients: 0,
-        clientsLeft: 1,
-        newClients: 0
-      }, { transaction });
+      await MonthlyReport.create(
+        {
+          monthName: date.toLocaleString("default", { month: "long" }),
+          monthNumber: date.getMonth() + 1,
+          year: date.getFullYear(),
+          activeClients: 0,
+          clientsLeft: 1,
+          newClients: 0,
+        },
+        { transaction }
+      );
     }
 
     await transaction.commit();
-    res.send({ message: 'Client deactivated successfully' });
+    res.send({ message: "Client deactivated successfully" });
   } catch (error) {
     await transaction.rollback();
     res.status(500).send(error);
@@ -117,15 +129,28 @@ export const deleteClient = async (req, res) => {
 
 export const getCountActiveClients = async (req, res) => {
   try {
-     console.log('count');
-      const count = await Client.count({
-          where: {
-              active: true 
-          }
-      });
-      res.status(200).json({ activeClients: count });
+    console.log("count");
+    const count = await Client.count({
+      where: {
+        active: true,
+      },
+    });
+    res.status(200).json({ activeClients: count });
   } catch (error) {
-      console.error('Erro ao buscar a quantidade de clientes ativos:', error);
-      res.status(500).send(error.message);
+    console.error("Erro ao buscar a quantidade de clientes ativos:", error);
+    res.status(500).send(error.message);
+  }
+};
+
+export const getAllClientsNotActive = async (req, res) => {
+  try {
+    const clients = await Client.findAll({
+      where: {
+        active: false,
+      },
+    });
+    res.send(clients);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
