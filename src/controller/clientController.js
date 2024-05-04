@@ -1,5 +1,6 @@
 import Client from "../model/client.js";
 import sequelize from "../config/config.js";
+import { literal } from "sequelize";
 import MonthlyReport from "../model/monthlyReport.js";
 
 export const createClient = async (req, res) => {
@@ -45,8 +46,51 @@ export const createClient = async (req, res) => {
 
 export const getAllClients = async (req, res) => {
   try {
-    const clients = await Client.findAll();
-    res.send(clients);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const offset = (page - 1) * limit;
+
+    const today = new Date().getDate();
+    const { count, rows } = await Client.findAndCountAll({
+      where: {
+        active: true,
+      },
+      limit,
+      offset,
+      order: [
+        [
+          literal(
+            `(CASE WHEN "client"."dueDay" >= ${today} THEN 0 ELSE 1 END)`
+          ),
+          "ASC",
+        ],
+        ["dueDay", "ASC"],
+      ],
+    });
+    const totalPages = Math.ceil(count / limit);
+    const results = {
+      next: null,
+      previous: null,
+      currentPage: page,
+      totalPages: totalPages,
+      results: rows,
+    };
+
+    if (offset + limit < count) {
+      results.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (offset > 0) {
+      results.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    res.json(results);
   } catch (error) {
     res.status(500).send(error);
   }

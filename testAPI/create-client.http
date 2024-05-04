@@ -2,11 +2,11 @@ POST  http://localhost:3000/clientes HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Edvaldo",
+    "name": "francisco",
     "phone": "123-456-7890",
     "birthdate": "1980-01-01",
     "enrollmentDate": "2021-09-01",
     "exitDate": null,
-    "dueDay": 10,
+    "dueDay": 1,
     "active": true
 }
