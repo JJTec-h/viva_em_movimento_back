@@ -1,3 +1,3 @@
-GET http://localhost:3000/clientes?page=1&limit=3 HTTP/1.1
+GET http://localhost:3000/clientes?search=isActive=true&page=1&limit=3 HTTP/1.1
 Content-Type: application/json
 

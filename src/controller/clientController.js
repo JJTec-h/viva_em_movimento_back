@@ -1,6 +1,6 @@
 import Client from "../model/client.js";
 import sequelize from "../config/config.js";
-import { literal } from "sequelize";
+import { literal, Op } from "sequelize";
 import MonthlyReport from "../model/monthlyReport.js";
 
 export const createClient = async (req, res) => {
@@ -49,11 +49,16 @@ export const getAllClients = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
     const offset = (page - 1) * limit;
+    const search = req.query.search || "";
+    const isActive = req.query.isActive || true;
 
     const today = new Date().getDate();
     const { count, rows } = await Client.findAndCountAll({
       where: {
-        active: true,
+        active: `${isActive}`,
+        name: {
+          [Op.iLike]: `%${search}%`,
+        },
       },
       limit,
       offset,
