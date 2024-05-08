@@ -1,21 +1,19 @@
 import express from "express";
-const router = express.Router();
 import {
   createClient,
   updateClient,
   deleteClient,
   getAllClients,
   getClient,
-  getCountActiveClients,
-  getAllClientsNotActive,
 } from "../controller/clientController.js";
+import { authenticate } from "../middleware.js";
 
-router.get("/quantidade", getCountActiveClients);
-router.get("/desativados", getAllClientsNotActive);
-router.post("/", createClient);
-router.get("/", getAllClients);
-router.get("/:id", getClient);
-router.put("/:id", updateClient);
-router.delete("/:id", deleteClient);
+const router = express.Router();
+
+router.post("/", authenticate, createClient);
+router.get("/", authenticate, getAllClients);
+router.get("/:id", authenticate, getClient);
+router.put("/:id", authenticate, updateClient);
+router.delete("/:id", authenticate, deleteClient);
 
 export default router;
