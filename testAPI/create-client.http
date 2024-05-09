@@ -1,11 +1,11 @@
 POST  http://localhost:3000/clientes HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MTQ4NTQ5NjMsImV4cCI6MTcxNDg2OTM2M30.oX2WcVVx_hJhOdPFDElX2yFxoB0I3H5o8N8Px1D2qsA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MTUyMjI2MzAsImV4cCI6MTcxNTIzNzAzMH0.Xpm1Y_VGvM8sD2-al0CMnSaNUQhRXRFHJGa5cTpGfI4
 
 {
-    "name": "Mateus",
+    "name": "Tsfs",
     "phone": "123-456-7890",
-    "birthdate": "1980-01-01",
+    "birthdate": "1980-05-09",
     "enrollmentDate": "2021-09-01",
     "exitDate": null,
     "dueDay": 30,

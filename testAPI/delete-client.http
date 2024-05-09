@@ -1,4 +1,4 @@
-DELETE http://localhost:3000/clientes/2 HTTP/1.1
+DELETE http://localhost:3000/clientes/13 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MTQ4NTQ5NjMsImV4cCI6MTcxNDg2OTM2M30.oX2WcVVx_hJhOdPFDElX2yFxoB0I3H5o8N8Px1D2qsA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MTUyMDY5NjcsImV4cCI6MTcxNTIyMTM2N30.vCcuXT2NVJrvTR1ScZS6n3wa3lJgOrwqkJ_1ZTUOVR0
 

@@ -1,13 +1,9 @@
 POST  http://localhost:8081/message/sendText/app HTTP/1.1
 Content-Type: application/json
-Authorization: apikey AHIFQ3xj9AcVSIQ3aUdUk3BusZta0TlMUzdoama0ltK7ErFye5rHW8TNEcxBMT4mpZmXgGVYLNpa1jJMOGaxhhWiqYfrDTAWtzEUtTZuGEnS4Z71XioDu4iQWKBUm2Ce
+X-API-Key: apikey AHIFQ3xj9AcVSIQ3aUdUk3BusZta0TlMUzdoama0ltK7ErFye5rHW8TNEcxBMT4mpZmXgGVYLNpa1jJMOGaxhhWiqYfrDTAWtzEUtTZuGEnS4Z71XioDu4iQWKBUm2Ce
 
 {
   "number": "5583986693858",
-  "options": {
-    "delay": 1200,
-    "presence": "composing"
-  },
   "textMessage": {
     "text": "Plain text message, sent with the _Evolution-API_ 🚀.\n\nHere you can send texts in *bold*, _italic_, ~strikethrough~ and `monospaced`.\n\nYou can also use any available emoticon on WhatsApp, like these examples below:\n\n😉🤣🤩🤝👏👍🙏"
   }
