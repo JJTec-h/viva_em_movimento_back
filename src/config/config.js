@@ -6,10 +6,10 @@ dotenv.config();
 const env = process.env.NODE_ENV || "development";
 const config = {
   development: {
-    username: "gymdev",
+    username: "postgres",
     password: "1234",
     database: "vivaemmovimento",
-    host: "paixaodecristorsa.site",
+    host: "localhost",
     dialect: "postgres",
   },
   test: {
