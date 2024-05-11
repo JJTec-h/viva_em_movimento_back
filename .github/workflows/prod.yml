@@ -35,8 +35,8 @@ jobs:
 
       - name: Run Docker containers
         run: |
-          docker-compose up -d
+          sudo docker-compose up -d
 
       - name: Check running containers
         run: |
-          docker ps
+          sudo docker ps
