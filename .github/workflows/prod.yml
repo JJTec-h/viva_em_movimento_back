@@ -30,7 +30,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Build and run Docker containers
+      - name: Checkout code
+        uses: actions/checkout@v3 # Assegura que o código também é extraído no ambiente de deploy
+
+      - name: Run Docker containers
         run: |
           docker-compose up -d
 
