@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build_and_run:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+  deploy:
+    needs: build
+    runs-on: self-hosted
+
+    steps:
       - name: Build and run Docker containers
         run: |
           docker-compose up -d
