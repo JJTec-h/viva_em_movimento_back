@@ -2,6 +2,7 @@ import Client from "../model/client.js";
 import MonthlyReport from "../model/monthlyReport.js";
 import sequelize from "../config/config.js";
 import { literal, Op, fn, col } from "sequelize";
+import clientDTO from "../model/dto/clientDTO.js";
 
 const createClientWithReportService = async (clientData) => {
   const transaction = await sequelize.transaction();
@@ -112,12 +113,16 @@ async function getAllClientsService(query) {
 
   const totalPages = Math.ceil(count / limit);
 
+  const rowsDTO = rows.map((client) => {
+    return new clientDTO(client);
+  });
+
   return {
     next: offset + limit < count ? { page: page + 1, limit } : null,
     previous: offset > 0 ? { page: page - 1, limit } : null,
     currentPage: page,
     totalPages: totalPages,
-    results: rows,
+    results: rowsDTO,
   };
 }
 
