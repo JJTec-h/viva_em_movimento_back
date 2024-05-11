@@ -6,7 +6,7 @@ dotenv.config();
 const env = process.env.NODE_ENV || "development";
 const config = {
   development: {
-    username: "postgres",
+    username: "gymdev",
     password: "1234",
     database: "vivaemmovimento",
     host: "paixaodecristorsa.site",
