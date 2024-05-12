@@ -64,6 +64,7 @@ const updateMonthlyReportOnDeleteService = async (clientId) => {
       report.clientsLeft += 1;
       report.activeClients -= 1;
       await report.save({ transaction });
+      console.log(aqui);
     } else {
       await MonthlyReport.create(
         {

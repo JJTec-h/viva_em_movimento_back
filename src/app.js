@@ -3,6 +3,7 @@ import cors from "cors";
 import { checkDatabase } from "./config/config.js";
 import clientRoutes from "./route/clientRoutes.js";
 import authRoutes from "./route/authRoutes.js";
+import monthlyRoutes from "./route/monthlyRoutes.js";
 import { authenticate } from "./middleware.js";
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(
 
 app.use("/auth", authRoutes);
 app.use("/clientes", authenticate, clientRoutes);
+app.use("/mes", authenticate, monthlyRoutes);
 
 const PORT = process.env.PORT || 3000;
 
