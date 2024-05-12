@@ -9,7 +9,6 @@ COPY package*.json ./
 
 # Instalar as dependências do projeto
 RUN npm install --production
-RUN npm run init-db
 
 # Copiar os outros arquivos do projeto para o diretório de trabalho
 COPY . .
