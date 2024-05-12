@@ -2,11 +2,11 @@ import MonthlyReport from "../model/monthlyReport.js";
 
 export const getMonthlyReport = async (req, res) => {
   const year = req.query.year;
-  const monthName = req.query.monthName;
+  const monthNumber = req.query.monthNumber;
   try {
     const result = await MonthlyReport.findOne({
       where: {
-        monthName: `${monthName}`,
+        monthNumber: `${monthNumber}`,
         year: `${year}`,
       },
     });
