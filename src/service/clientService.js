@@ -64,7 +64,6 @@ const updateMonthlyReportOnDeleteService = async (clientId) => {
       report.clientsLeft += 1;
       report.activeClients -= 1;
       await report.save({ transaction });
-      console.log(aqui);
     } else {
       await MonthlyReport.create(
         {
@@ -74,6 +73,48 @@ const updateMonthlyReportOnDeleteService = async (clientId) => {
           activeClients: 0,
           clientsLeft: 1,
           newClients: 0,
+        },
+        { transaction }
+      );
+    }
+    await transaction.commit();
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};
+const updateMonthlyReportOnActiveClientService = async (clientId) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const client = await Client.findByPk(clientId, { transaction });
+    if (!client) {
+      await transaction.rollback();
+      throw new Error("Client not found");
+    }
+    await client.update({ active: true }, { transaction });
+
+    const date = new Date();
+    const report = await MonthlyReport.findOne({
+      where: {
+        monthNumber: date.getMonth() + 1,
+        year: date.getFullYear(),
+      },
+      transaction,
+    });
+
+    if (report) {
+      report.newClients += 1;
+      report.activeClients += 1;
+      await report.save({ transaction });
+    } else {
+      await MonthlyReport.create(
+        {
+          monthName: date.toLocaleString("default", { month: "long" }),
+          monthNumber: date.getMonth() + 1,
+          year: date.getFullYear(),
+          activeClients: 1,
+          clientsLeft: 0,
+          newClients: 1,
         },
         { transaction }
       );
@@ -174,4 +215,5 @@ export {
   getClientByIdService,
   updateClientByIdService,
   findClientsForNotifications,
+  updateMonthlyReportOnActiveClientService,
 };

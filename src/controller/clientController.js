@@ -5,6 +5,7 @@ import {
   getClientByIdService,
   updateClientByIdService,
   findClientsForNotifications,
+  updateMonthlyReportOnActiveClientService,
 } from "../service/clientService.js";
 
 import sendWhatsAppMessage from "../service/whatsappService.js";
@@ -52,6 +53,15 @@ export const deleteClient = async (req, res) => {
   try {
     await updateMonthlyReportOnDeleteService(req.params.id);
     res.json({ message: "Client deactivated successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const activeClient = async (req, res) => {
+  try {
+    await updateMonthlyReportOnActiveClientService(req.params.id);
+    res.json({ message: "Client actived successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

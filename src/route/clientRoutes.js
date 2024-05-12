@@ -6,6 +6,7 @@ import {
   getAllClients,
   getClient,
   sendNotifications,
+  activeClient,
 } from "../controller/clientController.js";
 import { authenticate } from "../middleware.js";
 
@@ -15,6 +16,7 @@ router.post("/", authenticate, createClient);
 router.post("/send", sendNotifications);
 router.get("/", authenticate, getAllClients);
 router.get("/:id", authenticate, getClient);
+router.put("/ativar/:id", authenticate, activeClient);
 router.put("/:id", authenticate, updateClient);
 router.delete("/:id", authenticate, deleteClient);
 
