@@ -6,7 +6,6 @@ class clientEditDTO {
   dueDay;
   phone;
   active;
-  paymentStatus;
   name;
   birthdate;
   enrollmentDate;

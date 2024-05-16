@@ -208,33 +208,72 @@ async function updateStatusPaymentClientByIdService(
   await client.save({ transaction });
 }
 
+async function resetStatusPaymentClient(id) {
+  const client = await Client.findByPk(id);
+  if (!client) {
+    throw new Error("Cliente não encontrado");
+  }
+
+  client.paymentStatus = false;
+  client.save();
+}
+
 async function findClientsForNotifications() {
   const today = new Date();
   const tomorrow = new Date(today).getDate() + 1;
+  const expirationPayment = new Date(today).getDate() + 5;
   const day = today.getDate();
   const month = today.getMonth() + 1;
 
   const clients = await Client.findAll({
     where: {
-      [Op.or]: {
-        dueDay: tomorrow,
-        [Op.and]: [
-          sequelize.where(fn("EXTRACT", literal("'day' FROM birthdate")), day),
-          sequelize.where(
-            fn("EXTRACT", literal("'month' FROM birthdate")),
-            month
-          ),
-        ],
-      },
+      [Op.or]: [
+        {
+          dueDay: tomorrow,
+        },
+        {
+          dueDay: expirationPayment,
+        },
+      ],
+      [Op.and]: [
+        sequelize.where(fn("EXTRACT", literal("'day' FROM birthdate")), day),
+        sequelize.where(
+          fn("EXTRACT", literal("'month' FROM birthdate")),
+          month
+        ),
+      ],
     },
   });
 
   return clients;
 }
 
+async function clientIsBirthdate(client) {
+  const today = new Date().getDate();
+  return (client.dueDay = today);
+}
+
+async function clientIsExpirationDueDay(client) {
+  const today = new Date();
+  const tomorrow = new Date(today).getDate() + 1;
+  return (client.dueDay = tomorrow);
+}
+
+async function clientIsExpirationPayment(client) {
+  const today = new Date();
+  const expirationPayment = new Date(today).getDate() + 5;
+  return (client.dueDay = expirationPayment);
+}
+
 async function convertDate(datePattern) {
   let dateFormat = moment(datePattern, "YYYY-MM-DD");
   let dateFormatNew = dateFormat.format("DD/MM/YYYY");
+  return dateFormatNew;
+}
+
+async function convertDateView(datePattern) {
+  let dateFormat = moment(datePattern, "YYYY-MM-DD");
+  let dateFormatNew = dateFormat.format("DD/MM");
   return dateFormatNew;
 }
 
@@ -248,4 +287,9 @@ export {
   updateMonthlyReportOnActiveClientService,
   updateStatusPaymentClientByIdService,
   convertDate,
+  clientIsBirthdate,
+  clientIsExpirationDueDay,
+  clientIsExpirationPayment,
+  resetStatusPaymentClient,
+  convertDateView,
 };

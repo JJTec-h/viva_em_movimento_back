@@ -1,8 +1,15 @@
 import axios from "axios";
-import { findClientsForNotifications } from "./clientService.js";
+import {
+  clientIsBirthdate,
+  clientIsExpirationDueDay,
+  clientIsExpirationPayment,
+  findClientsForNotifications,
+  resetStatusPaymentClient,
+} from "./clientService.js";
 import { updateStatusPaymentClientByIdService } from "./clientService.js";
 import Payment from "../model/Payment.js";
 import { updateInvoicing } from "./monthyReportService.js";
+import sequelize from "../config/config.js";
 
 const API_URL = "http://localhost:8081/message/sendText/app";
 const ACCESS_API_KEY =
@@ -10,7 +17,7 @@ const ACCESS_API_KEY =
 
 async function sendWhatsAppMessage(phoneNumber, message) {
   const payload = {
-    number: phoneNumber,
+    number: `+55${phoneNumber}`,
     textMessage: {
       text: message,
     },
@@ -80,4 +87,33 @@ async function confirmPaymentUtils(clientId, amount) {
   }
 }
 
-export { sendWhatsAppMessage, confirmPaymentUtils };
+async function createMessageForBirthdate(nameClient) {
+  return `Parabéns, ${nameClient} lhe desejo muitos anos de vida!`;
+}
+
+async function createMessageForExpirationDueDay(nameClient, dueDay) {
+  return `Olá, ${nameClient}, espero que esteja tudo bem. \n\n 
+  Passando para lembrar que amanha ${dueDay} é o dia do pagamento da academia.`;
+}
+
+async function sendDailyMessages() {
+  const clients = await findClientsForNotifications();
+  clients.forEach((client) => {
+    console.log(client.nickname);
+    if (clientIsBirthdate) {
+      let message = `Parabéns, ${client.nickname} lhe desejo muitos anos de vida!`;
+      console.log(message);
+      sendWhatsAppMessage(client.phone, message);
+    }
+    if (clientIsExpirationDueDay) {
+      let message = `Olá, ${client.nickname}, espero que esteja tudo bem. \n\n 
+      Passando para lembrar que amanha ${client.dueDay} é o dia do pagamento da academia.`;
+      sendWhatsAppMessage(client.phone, message);
+    }
+    if (clientIsExpirationPayment) {
+      resetStatusPaymentClient(client.id);
+    }
+  });
+}
+
+export { sendWhatsAppMessage, confirmPaymentUtils, sendDailyMessages };
