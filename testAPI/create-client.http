@@ -1,6 +1,6 @@
 POST  http://localhost:3000/clientes HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE3MTUyMjI2MzAsImV4cCI6MTcxNTIzNzAzMH0.Xpm1Y_VGvM8sD2-al0CMnSaNUQhRXRFHJGa5cTpGfI4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRldiIsImlhdCI6MTcxNTgxMzQ2MSwiZXhwIjoxNzE1ODI3ODYxfQ.S-hllY9deuncUpylzZbTqP9jd_CnVfdc43Z30FZT9Cw
 
 {
     "name": "Tsfs",
@@ -9,5 +9,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc
     "enrollmentDate": "2021-09-01",
     "exitDate": null,
     "dueDay": 30,
-    "active": true
+    "active": true,
+    "lastPaymentDate": null,
+    "paymentStatus": false
 }

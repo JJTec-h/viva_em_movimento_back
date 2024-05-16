@@ -11,6 +11,9 @@ MonthlyReport.init(
     activeClients: DataTypes.INTEGER,
     clientsLeft: DataTypes.INTEGER,
     newClients: DataTypes.INTEGER,
+    amount: {
+      type: DataTypes.DECIMAL(10, 2),
+    },
   },
   { sequelize, modelName: "monthlyReport" }
 );

@@ -3,6 +3,7 @@ import sequelize from "./config.js";
 import Client from "../model/client.js";
 import MonthlyReport from "../model/monthlyReport.js";
 import User from "../model/user.js";
+import Payment from "../model/Payment.js";
 
 async function initializeDatabase() {
   try {

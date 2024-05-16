@@ -4,6 +4,7 @@ class clientDTO {
   dueDay;
   phone;
   active;
+  paymentStatus;
 
   constructor(data) {
     this.id = data.id;
@@ -11,6 +12,7 @@ class clientDTO {
     this.dueDay = data.dueDay;
     this.phone = data.phone;
     this.active = data.active;
+    this.paymentStatus = data.paymentStatus;
   }
 }
 

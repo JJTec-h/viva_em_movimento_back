@@ -7,8 +7,10 @@ import {
   findClientsForNotifications,
   updateMonthlyReportOnActiveClientService,
 } from "../service/clientService.js";
-
-import sendWhatsAppMessage from "../service/whatsappService.js";
+import {
+  sendWhatsAppMessage,
+  confirmPaymentUtils,
+} from "../service/utilsService.js";
 
 export const createClient = async (req, res) => {
   try {
@@ -24,6 +26,7 @@ export const getAllClients = async (req, res) => {
     const results = await getAllClientsService(req.query);
     res.json(results);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -70,3 +73,13 @@ export const activeClient = async (req, res) => {
 export async function sendNotifications() {
   sendWhatsAppMessage("5583987865478", "*teste*");
 }
+
+export const confirmPayment = async (req, res) => {
+  const { clientId, amount } = req.query;
+  try {
+    const result = await confirmPaymentUtils(clientId, amount);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

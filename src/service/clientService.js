@@ -3,9 +3,15 @@ import MonthlyReport from "../model/monthlyReport.js";
 import sequelize from "../config/config.js";
 import { literal, Op, fn, col } from "sequelize";
 import clientDTO from "../model/dto/clientDTO.js";
+import moment from "moment";
+import clientEditDTO from "../model/dto/clientEditDTO.js";
 
 const createClientWithReportService = async (clientData) => {
   const transaction = await sequelize.transaction();
+  clientData.enrollmentDate = moment(clientData.enrollmentDate, "DD/MM/YYYY");
+  clientData.birthdate = moment(clientData.birthdate, "DD/MM/YYYY");
+  clientData.lastPaymentDate = null;
+  clientData.paymentStatus = false;
   try {
     const client = await Client.create(clientData, { transaction });
     const date = new Date();
@@ -23,7 +29,7 @@ const createClientWithReportService = async (clientData) => {
     } else {
       await MonthlyReport.create(
         {
-          monthName: date.toLocaleString("default", { month: "long" }),
+          monthName: date.toLocaleString("pt-BR", { month: "long" }),
           monthNumber: month,
           year: year,
           activeClients: 1,
@@ -134,7 +140,6 @@ async function getAllClientsService(query) {
   const isActive = query.isActive || true;
 
   const today = new Date().getDate();
-
   const { count, rows } = await Client.findAndCountAll({
     where: {
       active: `${isActive}`,
@@ -158,7 +163,6 @@ async function getAllClientsService(query) {
   const rowsDTO = rows.map((client) => {
     return new clientDTO(client);
   });
-
   return {
     next: offset + limit < count ? { page: page + 1, limit } : null,
     previous: offset > 0 ? { page: page - 1, limit } : null,
@@ -173,7 +177,9 @@ async function getClientByIdService(id) {
   if (!client) {
     throw new Error("Client not found");
   }
-  return client;
+
+  const clientDto = new clientEditDTO(client);
+  return clientDto;
 }
 
 async function updateClientByIdService(id, updateData) {
@@ -182,6 +188,22 @@ async function updateClientByIdService(id, updateData) {
     throw new Error("Client not found");
   }
   return await client.update(updateData);
+}
+
+async function updateStatusPaymentClientByIdService(
+  id,
+  transaction,
+  paymentDate
+) {
+  const client = await Client.findByPk(id, { transaction });
+  if (!client) {
+    throw new Error("Cliente não encontrado");
+  }
+
+  // Atualiza o status de pagamento do cliente
+  client.lastPaymentDate = paymentDate;
+  client.paymentStatus = true;
+  await client.save({ transaction });
 }
 
 async function findClientsForNotifications() {
@@ -208,6 +230,12 @@ async function findClientsForNotifications() {
   return clients;
 }
 
+async function convertDate(datePattern) {
+  let dateFormat = moment(datePattern, "YYYY-MM-DD");
+  let dateFormatNew = dateFormat.format("DD/MM/YYYY");
+  return dateFormatNew;
+}
+
 export {
   createClientWithReportService,
   updateMonthlyReportOnDeleteService,
@@ -216,4 +244,6 @@ export {
   updateClientByIdService,
   findClientsForNotifications,
   updateMonthlyReportOnActiveClientService,
+  updateStatusPaymentClientByIdService,
+  convertDate,
 };
