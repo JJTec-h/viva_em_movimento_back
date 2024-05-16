@@ -215,6 +215,7 @@ async function resetStatusPaymentClient(id) {
   }
 
   client.paymentStatus = false;
+  client.lastPaymentDate = null;
   client.save();
 }
 
