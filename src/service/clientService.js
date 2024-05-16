@@ -184,6 +184,8 @@ async function getClientByIdService(id) {
 
 async function updateClientByIdService(id, updateData) {
   const client = await Client.findByPk(id);
+  updateData.enrollmentDate = moment(updateData.enrollmentDate, "DD/MM/YYYY");
+  updateData.birthdate = moment(updateData.birthdate, "DD/MM/YYYY");
   if (!client) {
     throw new Error("Client not found");
   }
