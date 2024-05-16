@@ -18,7 +18,7 @@ class clientDTO {
     this.paymentStatus = data.paymentStatus;
     convertDateView(data.lastPaymentDate).then((res, err) => {
       this.lastPaymentDate = res;
-      if (err) this.lastPaymentDate = false;
+      if (err || res === "Invalid date") this.lastPaymentDate = false;
     });
   }
 }
