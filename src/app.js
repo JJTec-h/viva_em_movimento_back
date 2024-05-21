@@ -5,6 +5,7 @@ import clientRoutes from "./route/clientRoutes.js";
 import authRoutes from "./route/authRoutes.js";
 import monthlyRoutes from "./route/monthlyRoutes.js";
 import { authenticate } from "./middleware.js";
+import "./jobs/dailyTask.js";
 
 const app = express();
 

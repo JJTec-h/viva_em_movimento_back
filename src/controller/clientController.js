@@ -75,7 +75,7 @@ export async function sendNotifications() {
 }
 
 export const confirmPayment = async (req, res) => {
-  const { clientId, amount } = req.query;
+  const { clientId, amount } = req.body.params;
   try {
     const result = await confirmPaymentUtils(clientId, amount);
     res.status(201).json(result);

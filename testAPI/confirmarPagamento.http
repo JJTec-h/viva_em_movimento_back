@@ -1,5 +1,4 @@
-GET http://localhost:3000/clientes HTTP/1.1
+POST  http://localhost:3000/clientes/confirmarPagamento?clientId=1&amount=50 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRldiIsImlhdCI6MTcxNTg5Mzc4NiwiZXhwIjoxNzE1OTA4MTg2fQ.SDIQoRH068LPuv0LZNipnAPy1kavF96dn9JrflTqvyg
-
 

@@ -1,7 +1,7 @@
 import Client from "../model/client.js";
 import MonthlyReport from "../model/monthlyReport.js";
 import sequelize from "../config/config.js";
-import { literal, Op, fn, col } from "sequelize";
+import { literal, Op, fn } from "sequelize";
 import clientDTO from "../model/dto/clientDTO.js";
 import moment from "moment";
 import clientEditDTO from "../model/dto/clientEditDTO.js";
@@ -230,18 +230,27 @@ async function findClientsForNotifications() {
     where: {
       [Op.or]: [
         {
-          dueDay: tomorrow,
+          [Op.or]: [
+            {
+              dueDay: tomorrow,
+            },
+            {
+              dueDay: expirationPayment,
+            },
+          ],
         },
         {
-          dueDay: expirationPayment,
+          [Op.and]: [
+            sequelize.where(
+              fn("EXTRACT", literal("'day' FROM birthdate")),
+              day
+            ),
+            sequelize.where(
+              fn("EXTRACT", literal("'month' FROM birthdate")),
+              month
+            ),
+          ],
         },
-      ],
-      [Op.and]: [
-        sequelize.where(fn("EXTRACT", literal("'day' FROM birthdate")), day),
-        sequelize.where(
-          fn("EXTRACT", literal("'month' FROM birthdate")),
-          month
-        ),
       ],
     },
   });
@@ -249,21 +258,33 @@ async function findClientsForNotifications() {
   return clients;
 }
 
-async function clientIsBirthdate(client) {
+async function clientIsBirthdate(dueDay) {
   const today = new Date().getDate();
-  return (client.dueDay = today);
+  if (dueDay == today) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
-async function clientIsExpirationDueDay(client) {
+async function clientIsExpirationDueDay(dueDay) {
   const today = new Date();
   const tomorrow = new Date(today).getDate() + 1;
-  return (client.dueDay = tomorrow);
+  if (dueDay == tomorrow) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
-async function clientIsExpirationPayment(client) {
+async function clientIsExpirationPayment(dueDay) {
   const today = new Date();
   const expirationPayment = new Date(today).getDate() + 5;
-  return (client.dueDay = expirationPayment);
+  if (dueDay == expirationPayment) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 async function convertDate(datePattern) {

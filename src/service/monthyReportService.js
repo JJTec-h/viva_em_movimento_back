@@ -1,4 +1,6 @@
 import MonthlyReport from "../model/monthlyReport.js";
+import monthlyReportUserDTO from "../model/dto/monthlyReportUserDTO.js";
+import { Op } from "sequelize";
 
 async function getReport(year, monthNumber) {
   try {
@@ -13,8 +15,31 @@ async function getReport(year, monthNumber) {
     throw new Error("erro ao obter relatorio mensal: ", error);
   }
 }
+async function getReportForUser(year, monthNumber) {
+  try {
+    const result = await MonthlyReport.findAll({
+      where: {
+        [Op.or]: [
+          {
+            monthNumber: monthNumber,
+          },
+          {
+            monthNumber: monthNumber - 1,
+          },
+        ],
+        year: `${year}`,
+      },
+    });
 
-async function updateInvoicing(month, year, amount, transaction) {
+    const resultDTO = new monthlyReportUserDTO(result);
+    return resultDTO;
+  } catch (error) {
+    console.log(error);
+    throw new Error("erro ao obter relatorio mensal: ", error);
+  }
+}
+
+async function updateInvoicing(month, year, amount, transaction, paymentDate) {
   const report = await MonthlyReport.findOne({
     where: {
       monthNumber: month,
@@ -23,8 +48,12 @@ async function updateInvoicing(month, year, amount, transaction) {
     transaction,
   });
 
-  if (report) {
-    report.invoicing = parseFloat(report.invoicing) + amount;
+  if (report && report.amount) {
+    report.amount = parseFloat(report.amount) + amount;
+    await report.save({ transaction });
+  } else if (report && !report.amount) {
+    console.log("report att");
+    report.amount = amount;
     await report.save({ transaction });
   } else {
     await MonthlyReport.create(
@@ -35,11 +64,11 @@ async function updateInvoicing(month, year, amount, transaction) {
         activeClients: 1,
         clientsLeft: 0,
         newClients: 0,
-        invoicing: amount,
+        amount: amount,
       },
       { transaction }
     );
   }
 }
 
-export { getReport, updateInvoicing };
+export { getReport, updateInvoicing, getReportForUser };

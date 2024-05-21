@@ -10,6 +10,7 @@ import { updateStatusPaymentClientByIdService } from "./clientService.js";
 import Payment from "../model/Payment.js";
 import { updateInvoicing } from "./monthyReportService.js";
 import sequelize from "../config/config.js";
+import { literal, Op, fn } from "sequelize";
 
 const API_URL = "http://localhost:8081/message/sendText/app";
 const ACCESS_API_KEY =
@@ -31,8 +32,6 @@ async function sendWhatsAppMessage(phoneNumber, message) {
       },
     });
     const clientes = await findClientsForNotifications();
-    console.log("clientes", clientes);
-    console.log("Mensagem enviada:", response.data);
   } catch (error) {
     console.error(
       "Erro ao enviar mensagem:",
@@ -43,11 +42,8 @@ async function sendWhatsAppMessage(phoneNumber, message) {
 
 async function confirmPaymentUtils(clientId, amount) {
   amount = parseFloat(amount);
-
   if (isNaN(amount)) {
-    return res
-      .status(400)
-      .json({ error: "O valor de amount deve ser um número válido." });
+    throw "O valor de amount deve ser um número válido.";
   }
 
   const transaction = await sequelize.transaction();
@@ -77,7 +73,7 @@ async function confirmPaymentUtils(clientId, amount) {
     );
 
     // Atualiza o relatório mensal
-    await updateInvoicing(month, year, amount, transaction);
+    await updateInvoicing(month, year, amount, transaction, paymentDate);
 
     await transaction.commit();
     return { message: "Pagamento confirmado com sucesso!" };
@@ -92,25 +88,25 @@ async function createMessageForBirthdate(nameClient) {
 }
 
 async function createMessageForExpirationDueDay(nameClient, dueDay) {
-  return `Olá, ${nameClient}, espero que esteja tudo bem. \n\n 
+  return `Olá, ${nameClient}, espero que esteja tudo bem. \n
   Passando para lembrar que amanha ${dueDay} é o dia do pagamento da academia.`;
 }
 
 async function sendDailyMessages() {
   const clients = await findClientsForNotifications();
-  clients.forEach((client) => {
-    console.log(client.nickname);
-    if (clientIsBirthdate) {
+  clients.forEach(async (client) => {
+    console.log(client.nickname, client.dueDay);
+    if (clientIsBirthdate(client.dueDay)) {
       let message = `Parabéns, ${client.nickname} lhe desejo muitos anos de vida!`;
-      console.log(message);
       sendWhatsAppMessage(client.phone, message);
     }
-    if (clientIsExpirationDueDay) {
-      let message = `Olá, ${client.nickname}, espero que esteja tudo bem. \n\n 
-      Passando para lembrar que amanha ${client.dueDay} é o dia do pagamento da academia.`;
+    if (clientIsExpirationDueDay(client.dueDay)) {
+      let message = `Olá, ${client.nickname}, espero que esteja tudo bem.
+      Passando para lembrar que amanha ${client.dueDay} 
+      é o dia do pagamento da academia.`;
       sendWhatsAppMessage(client.phone, message);
     }
-    if (clientIsExpirationPayment) {
+    if (clientIsExpirationPayment(client.dueDay)) {
       resetStatusPaymentClient(client.id);
     }
   });

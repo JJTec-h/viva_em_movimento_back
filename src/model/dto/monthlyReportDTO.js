@@ -1,4 +1,4 @@
-class clientDTO {
+class monthlyReportDTO {
   activeClients;
   clientsLeft;
   newClients;
@@ -9,4 +9,4 @@ class clientDTO {
   }
 }
 
-export default clientDTO;
+export default monthlyReportDTO;
