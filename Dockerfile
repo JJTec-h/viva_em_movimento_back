@@ -1,5 +1,5 @@
 # Usar uma imagem base do Node.js (Alpine para menor tamanho de imagem)
-FROM node:alpine3.19
+FROM node:20-alpine
 
 # Definir o diretório de trabalho dentro do contêiner
 WORKDIR /app
