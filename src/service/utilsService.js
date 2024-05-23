@@ -10,11 +10,9 @@ import { updateStatusPaymentClientByIdService } from "./clientService.js";
 import Payment from "../model/Payment.js";
 import { updateInvoicing } from "./monthyReportService.js";
 import sequelize from "../config/config.js";
-import { literal, Op, fn } from "sequelize";
 
-const API_URL = "http://localhost:8081/message/sendText/app";
-const ACCESS_API_KEY =
-  "AHIFQ3xj9AcVSIQ3aUdUk3BusZta0TlMUzdoama0ltK7ErFye5rHW8TNEcxBMT4mpZmXgGVYLNpa1jJMOGaxhhWiqYfrDTAWtzEUtTZuGEnS4Z71XioDu4iQWKBUm2Ce";
+const API_URL = process.env.API_EVOLUTION;
+const ACCESS_API_KEY = process.env.API_KEY_EVOLUTION;
 
 async function sendWhatsAppMessage(phoneNumber, message) {
   const payload = {
@@ -31,7 +29,6 @@ async function sendWhatsAppMessage(phoneNumber, message) {
         apikey: ACCESS_API_KEY,
       },
     });
-    const clientes = await findClientsForNotifications();
   } catch (error) {
     console.error(
       "Erro ao enviar mensagem:",

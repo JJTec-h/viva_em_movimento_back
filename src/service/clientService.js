@@ -143,8 +143,13 @@ async function getAllClientsService(query) {
   const { count, rows } = await Client.findAndCountAll({
     where: {
       active: `${isActive}`,
-      name: {
-        [Op.iLike]: `%${search}%`,
+      [Op.or]: {
+        name: {
+          [Op.iLike]: `%${search}%`,
+        },
+        nickname: {
+          [Op.iLike]: `%${search}%`,
+        },
       },
     },
     limit,

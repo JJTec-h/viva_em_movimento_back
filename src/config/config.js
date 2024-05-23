@@ -37,7 +37,6 @@ const sequelize = new Sequelize(
 );
 
 export const checkDatabase = async () => {
-  console.log(config);
   try {
     await sequelize.authenticate();
     console.log("Conexão com o banco de dados estabelecida com sucesso.");
