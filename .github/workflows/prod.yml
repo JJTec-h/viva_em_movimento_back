@@ -1,42 +1,44 @@
-name: Docker Compose Workflow
-
+name: Deploy Application Academia Viva em Movimento API
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Compose
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build # Adjust this command according to your project's build script
+
+      - name: Login Docker Hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Build docker image
+        run: docker build -t ${{secrets.DOCKER_USERNAME}}/vivaemmovimento -f Dockerfile .
+
+      - name: Push image docker
+        run: docker push ${{secrets.DOCKER_USERNAME}}/vivaemmovimento
 
   deploy:
     needs: build
     runs-on: self-hosted
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 # Assegura que o código também é extraído no ambiente de deploy
+      - name: Pull image from Docker hub
+        run: sudo docker pull ${{secrets.DOCKER_USERNAME}}/vivaemmovimento:latest
 
-      - name: Run Docker containers
-        run: |
-          sudo docker-compose up -d
+      - name: Remove old container
+        run: sudo docker rm -f vivaemmovimento
 
-      - name: Check running containers
-        run: |
-          sudo docker ps
+      - name: Run docker container
+        run: sudo docker run -d -p 3000:3000 --name vivaemmovimento ${{secrets.DOCKER_USERNAME}}/vivaemmovimento
