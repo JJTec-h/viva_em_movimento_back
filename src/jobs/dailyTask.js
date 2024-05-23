@@ -2,7 +2,7 @@
 import cron from "node-cron";
 import { sendDailyMessages } from "../service/utilsService.js";
 
-cron.schedule("0 8 * * * *", async () => {
+cron.schedule("0 0 8 * * *", async () => {
   console.log("Iniciando tarefa diária às 8h");
   try {
     const instant = new Date();
