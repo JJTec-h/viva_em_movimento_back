@@ -93,10 +93,10 @@ async function sendDailyMessages() {
   const clients = await findClientsForNotifications();
   clients.forEach(async (client) => {
     console.log(client.nickname, client.dueDay);
-    if (clientIsBirthdate(client.dueDay)) {
-      let message = `Parabéns, ${client.nickname} lhe desejo muitos anos de vida!`;
-      sendWhatsAppMessage(client.phone, message);
-    }
+    // if (clientIsBirthdate(client.dueDay)) {
+    //   let message = `Parabéns, ${client.nickname} lhe desejo muitos anos de vida!`;
+    //   sendWhatsAppMessage(client.phone, message);
+    // }
     if (clientIsExpirationDueDay(client.dueDay)) {
       let message = `Olá, ${client.nickname}, espero que esteja tudo bem.
       Passando para lembrar que amanha ${client.dueDay} 
