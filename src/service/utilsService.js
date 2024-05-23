@@ -7,7 +7,7 @@ import {
   resetStatusPaymentClient,
 } from "./clientService.js";
 import { updateStatusPaymentClientByIdService } from "./clientService.js";
-import Payment from "../model/Payment.js";
+import Payment from "../model/payment.js";
 import { updateInvoicing } from "./monthyReportService.js";
 import sequelize from "../config/config.js";
 
