@@ -6,10 +6,10 @@ dotenv.config();
 const env = process.env.NODE_ENV || "development";
 const config = {
   development: {
-    username: "postgres",
-    password: "1234",
+    username: "gym",
+    password: "KWcGuiAFjm3wati",
     database: "vivaemmovimento",
-    host: "localhost",
+    host: "paixaodecristorsa.site",
     dialect: "postgres",
   },
   test: {
@@ -38,6 +38,7 @@ const sequelize = new Sequelize(
 
 export const checkDatabase = async () => {
   try {
+    console.log(config);
     await sequelize.authenticate();
     console.log("Conexão com o banco de dados estabelecida com sucesso.");
   } catch (error) {
