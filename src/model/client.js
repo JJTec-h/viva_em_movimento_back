@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/config.js";
-import Payment from "./Payment.js";
+import Payment from "./payment.js";
 
 class Client extends Model {}
 
