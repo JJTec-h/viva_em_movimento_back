@@ -18,7 +18,7 @@ services:
       - /app/node_modules
 
   db:
-    container_name: postgres
+    container_name: db
     image: postgres:alpine
     command: -c password_encryption=md5
     environment:
