@@ -14,6 +14,11 @@ MonthlyReport.init(
     amount: {
       type: DataTypes.DECIMAL(10, 2),
     },
+    personalExpense: DataTypes.INTEGER,
+    waterExpense: DataTypes.INTEGER,
+    energyExpense: DataTypes.INTEGER,
+    siteExpense: DataTypes.INTEGER,
+    otherExpense: DataTypes.INTEGER,
   },
   { sequelize, modelName: "monthlyReport" }
 );

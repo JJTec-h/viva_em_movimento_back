@@ -97,12 +97,12 @@ async function sendDailyMessages() {
     //   let message = `Parabéns, ${client.nickname} lhe desejo muitos anos de vida!`;
     //   sendWhatsAppMessage(client.phone, message);
     // }
-    if (clientIsExpirationDueDay(client.dueDay)) {
-      let message = `Olá, ${client.nickname}, espero que esteja tudo bem.
-      Passando para lembrar que amanha ${client.dueDay} 
-      é o dia do pagamento da academia.`;
-      sendWhatsAppMessage(client.phone, message);
-    }
+    // if (clientIsExpirationDueDay(client.dueDay)) {
+    //   let message = `Olá, ${client.nickname}, espero que esteja tudo bem.
+    //   Passando para lembrar que amanha ${client.dueDay}
+    //   é o dia do pagamento da academia.`;
+    //   sendWhatsAppMessage(client.phone, message);
+    // }
     if (clientIsExpirationPayment(client.dueDay)) {
       resetStatusPaymentClient(client.id);
     }

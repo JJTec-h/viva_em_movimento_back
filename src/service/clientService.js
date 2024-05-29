@@ -27,12 +27,22 @@ const createClientWithReportService = async (clientData) => {
       report.activeClients += 1;
       await report.save({ transaction });
     } else {
+      const monthReport = await MonthlyReport.findOne({
+        where: {
+          monthNumber: date.getMonth() - 1,
+          year: date.getFullYear(),
+        },
+        transaction,
+      });
+
+      const activeClientsPrevious = monthReport ? monthReport.activeClients : 1;
+
       await MonthlyReport.create(
         {
           monthName: date.toLocaleString("pt-BR", { month: "long" }),
           monthNumber: month,
           year: year,
-          activeClients: 1,
+          activeClients: activeClientsPrevious,
           clientsLeft: 0,
           newClients: 1,
         },
@@ -71,12 +81,22 @@ const updateMonthlyReportOnDeleteService = async (clientId) => {
       report.activeClients -= 1;
       await report.save({ transaction });
     } else {
+      const monthReport = await MonthlyReport.findOne({
+        where: {
+          monthNumber: date.getMonth() - 1,
+          year: date.getFullYear(),
+        },
+        transaction,
+      });
+
+      const activeClientsPrevious = monthReport ? monthReport.activeClients : 0;
+
       await MonthlyReport.create(
         {
           monthName: date.toLocaleString("default", { month: "long" }),
           monthNumber: date.getMonth() + 1,
           year: date.getFullYear(),
-          activeClients: 0,
+          activeClients: activeClientsPrevious,
           clientsLeft: 1,
           newClients: 0,
         },
@@ -113,12 +133,22 @@ const updateMonthlyReportOnActiveClientService = async (clientId) => {
       report.activeClients += 1;
       await report.save({ transaction });
     } else {
+      const monthReport = await MonthlyReport.findOne({
+        where: {
+          monthNumber: date.getMonth() - 1,
+          year: date.getFullYear(),
+        },
+        transaction,
+      });
+
+      const activeClientsPrevious = monthReport ? monthReport.activeClients : 1;
+
       await MonthlyReport.create(
         {
           monthName: date.toLocaleString("default", { month: "long" }),
           monthNumber: date.getMonth() + 1,
           year: date.getFullYear(),
-          activeClients: 1,
+          activeClients: activeClientsPrevious,
           clientsLeft: 0,
           newClients: 1,
         },

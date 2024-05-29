@@ -17,16 +17,9 @@ async function getReport(year, monthNumber) {
 }
 async function getReportForUser(year, monthNumber) {
   try {
-    const result = await MonthlyReport.findAll({
+    const result = await MonthlyReport.findOne({
       where: {
-        [Op.or]: [
-          {
-            monthNumber: monthNumber,
-          },
-          {
-            monthNumber: monthNumber - 1,
-          },
-        ],
+        monthNumber: monthNumber,
         year: `${year}`,
       },
     });
@@ -56,12 +49,22 @@ async function updateInvoicing(month, year, amount, transaction, paymentDate) {
     report.amount = amount;
     await report.save({ transaction });
   } else {
+    const monthReport = await MonthlyReport.findOne({
+      where: {
+        monthNumber: date.getMonth() - 1,
+        year: date.getFullYear(),
+      },
+      transaction,
+    });
+
+    const activeClientsPrevious = monthReport ? monthReport.activeClients : 1;
+
     await MonthlyReport.create(
       {
         monthName: paymentDate.toLocaleString("pt-BR", { month: "long" }),
         monthNumber: month,
         year: year,
-        activeClients: 1,
+        activeClients: activeClientsPrevious,
         clientsLeft: 0,
         newClients: 0,
         amount: amount,
@@ -71,4 +74,34 @@ async function updateInvoicing(month, year, amount, transaction, paymentDate) {
   }
 }
 
-export { getReport, updateInvoicing, getReportForUser };
+async function updateExpenses(
+  year,
+  month,
+  personal,
+  energy,
+  water,
+  site,
+  other
+) {
+  const report = await MonthlyReport.findOne({
+    where: {
+      monthNumber: month,
+      year: year,
+    },
+  });
+
+  if (report) {
+    report.personalExpense = parseInt(personal);
+    report.waterExpense = parseInt(water);
+    report.energyExpense = parseInt(energy);
+    report.siteExpense = parseInt(site);
+    report.otherExpense = parseInt(other);
+    console.log(report);
+    await report.save();
+
+    return "Relatório atualizado!";
+  }
+  return "Falha ao atualizar relatório";
+}
+
+export { getReport, updateInvoicing, getReportForUser, updateExpenses };

@@ -6,7 +6,7 @@ cron.schedule("0 0 8 * * *", async () => {
   console.log("Iniciando tarefa diária às 8h");
   try {
     const instant = new Date();
-    //sendDailyMessages();
+    sendDailyMessages();
     console.log("Mensagens enviadas com sucesso as: ", instant);
   } catch (error) {
     console.error("Erro ao enviar mensagens:", error);
