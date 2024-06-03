@@ -257,7 +257,10 @@ async function resetStatusPaymentClient(id) {
 async function findClientsForNotifications() {
   const today = new Date();
   const tomorrow = new Date(today).getDate() + 1;
-  const expirationPayment = new Date(today).getDate() + 5;
+  let expirationPayment = new Date(today).getDate() + 5;
+  if (expirationPayment > 30) {
+    expirationPayment = expirationPayment - 30;
+  }
   const day = today.getDate();
   const month = today.getMonth() + 1;
 
