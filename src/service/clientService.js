@@ -184,13 +184,7 @@ async function getAllClientsService(query) {
     },
     limit,
     offset,
-    order: [
-      [
-        literal(`(CASE WHEN "client"."dueDay" >= ${today} THEN 0 ELSE 1 END)`),
-        "ASC",
-      ],
-      ["dueDay", "ASC"],
-    ],
+    order: [["dueDay", "ASC"]],
   });
 
   const totalPages = Math.ceil(count / limit);
